@@ -227,7 +227,8 @@ class GanjaMission extends SurvivorMissions
 		//Set car CE lifetime
 		MissionCar.SetLifetime( 3600 );	
 		
-		m_MissionObjects.InsertAt( MissionCar, 0 ); 		
+		//Dude where's my car? Shouldn't despawn a car where ppl most probably have put their stuff into. so cruel
+		//m_MissionObjects.InsertAt( MissionCar, 0 );
 	}
 	
 	void SpawnRewards()
@@ -447,6 +448,7 @@ class GanjaMission extends SurvivorMissions
 			//Spawn mission vehicle related stuff
 			Object CarStuff;
 			
+			/* Cars don't use Oil (in dayz 1.10)
 			CarStuff = GetGame().CreateObject("EngineOil", MissionBuilding.ModelToWorld( Spawnpoints.Get(0) ));
 			CarStuff.SetOrientation( MissionBuilding.GetOrientation() + "-90 0 0");
 			m_MissionObjects.InsertAt( CarStuff, 2 );
@@ -455,7 +457,7 @@ class GanjaMission extends SurvivorMissions
 			m_MissionObjects.InsertAt( CarStuff, 3 );			
 			CarStuff = GetGame().CreateObject("EngineOil", MissionBuilding.ModelToWorld( Spawnpoints.Get(0) + "0.4 0 0" ));
 			CarStuff.SetOrientation( MissionBuilding.GetOrientation() + "-90 0 0");
-			m_MissionObjects.InsertAt( CarStuff, 4 );			
+			m_MissionObjects.InsertAt( CarStuff, 4 ); */
 			m_MissionObjects.Insert( GetGame().CreateObject("CanisterGasoline", MissionBuilding.ModelToWorld( Spawnpoints.Get(3) )));
 			m_MissionObjects.Insert( GetGame().CreateObject("SparkPlug", MissionBuilding.ModelToWorld( Spawnpoints.Get(4) )));		
 			m_MissionObjects.Insert( GetGame().CreateObject("Wrench", MissionBuilding.ModelToWorld( Spawnpoints.Get(4) - "0 0 0.2" )));
