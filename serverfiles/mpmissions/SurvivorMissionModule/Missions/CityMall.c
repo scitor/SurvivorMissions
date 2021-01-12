@@ -187,7 +187,6 @@ class CityMallMission extends SurvivorMissions
 		Barricades.Insert( new Param3<string,vector,vector>("Land_Roadblock_WoodenCrate", "-9.69 -0.882 1.7", "-30 0 0"));
 		Barricades.Insert( new Param3<string,vector,vector>("Land_Roadblock_WoodenCrate", "-9.59 -0.262 1.7", "-32 0 5"));
 		//other stuff, dead survivor related 
-		Barricades.Insert( new Param3<string,vector,vector>("AdvancedImprovisedShelterPitched", "7.84 -1.18149 1.39", "-90 0 0"));
 		Barricades.Insert( new Param3<string,vector,vector>("PissGround", "-10.26 -1.21049 -8.08", "180 0 0"));
 									
 		//Search for mission building at primary mission position	
@@ -694,14 +693,16 @@ class CityMallMission extends SurvivorMissions
 		//Check if container has desired amount of mushrooms collected at primary mission position
 		if ( MissionObject && MissionObject.ClassName() == "MountainBag_Orange" && !m_MissionExtended )
 		{
-			int CargoCount = MissionObject.GetInventory().CountInventory();
+			int CargoCount;
 			int LastCount = 0;
 			int FoundMedObjects = 0;
 			int FoundFoodObjects = 0;
 			
+			CargoCount = MissionObject.GetInventory().CountInventory();
+			
 			if ( CargoCount != LastCount )
 			{
-				if ( CargoCount >= ReqFoodAmount + ReqMedAmount && FoundMedObjects <= ReqMedAmount && FoundFoodObjects <= ReqFoodAmount )
+				if ( CargoCount >= ReqFoodAmount + ReqMedAmount )
 				{	
 					CargoBase CargoItems1 = MissionObject.GetInventory().GetCargo();		
 					
@@ -731,17 +732,16 @@ class CityMallMission extends SurvivorMissions
 							break;
 						} 
 					}
-					LastCount = CargoCount;
+					
+					FoundMedObjects = 0;
+					FoundFoodObjects = 0;				
 				}
+				
+				LastCount = CargoCount;
 			} 
 		}				
 	}
-		
-	void UpdateBots( float dt )
-	{
-		//No bots involved in this mission		
-	}
-	
+			
 	bool DeployMission()
 	{	//When first player enters the mission zone (primary/secondary)
 		//Get MissionBuilding at secondary mission position

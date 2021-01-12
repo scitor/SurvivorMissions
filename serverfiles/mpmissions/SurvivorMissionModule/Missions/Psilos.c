@@ -492,13 +492,15 @@ class PsilosMission extends SurvivorMissions
 		//Check if container has desired amount of mushrooms collected at primary mission position
 		if ( MissionObject && MissionObject.ClassName() == "SmallProtectorCase" && !m_MissionExtended )
 		{
-			int CargoCount = MissionObject.GetInventory().CountInventory();
+			int CargoCount;
 			int LastCount = 0;
 			int FoundObjects = 0;
 			
+			CargoCount = MissionObject.GetInventory().CountInventory();
+			
 			if ( CargoCount != LastCount )
 			{
-				if ( CargoCount >= ReqShroomsCount && FoundObjects <= ReqShroomsCount )
+				if ( CargoCount >= ReqShroomsCount )
 				{	
 					CargoBase CargoItems1 = MissionObject.GetInventory().GetCargo();		
 					
@@ -522,8 +524,11 @@ class PsilosMission extends SurvivorMissions
 							break;
 						} 
 					}
-					LastCount = CargoCount;
+					
+					FoundObjects = 0;
 				}
+				
+				LastCount = CargoCount;
 			} 
 		}		
 	}

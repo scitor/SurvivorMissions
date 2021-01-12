@@ -6,10 +6,7 @@ class CampMission extends SurvivorMissions
 	Object cc_fireplace;
 	Object cc_mtent;
 	Grenade_Base BoobyTrap; 
-	
-	//Mission parameters
-	int MsgDlyFinish = 300;					//seconds, message delay time after player has finished mission
-	
+		
 	//Mission containers
 	ref array<vector> InfectedSpawns = new array<vector>;
 	ref array<string> InfectedTypes = new array<string>;
@@ -23,7 +20,7 @@ class CampMission extends SurvivorMissions
 	{
 		//Mission mission timeout
 		m_MissionTimeout = 2700;			//seconds, mission duration time
-		
+
 		//Mission zones
 		m_MissionZoneOuterRadius = 170.0;	//meters (!Do not set lower than 200m), mission activation distance
 		m_MissionZoneInnerRadius = 3.0;		//meters (!Do not set outside of 1-5m), mission finishing distance to target object
@@ -166,8 +163,8 @@ class CampMission extends SurvivorMissions
 				
 		if (selectedLoadout == 0)
 		{
-			weapon = MissionObject.GetInventory().CreateInInventory("M4A1_Green");
-				weapon.GetInventory().CreateAttachment("M4_RISHndgrd_Green");
+			weapon = MissionObject.GetInventory().CreateInInventory("M4A1");
+				weapon.GetInventory().CreateAttachment("M4_RISHndgrd");
 				weapon.GetInventory().CreateAttachment("M4_MPBttstck");
 				weapon.GetInventory().CreateAttachment("ACOGOptic");
 				weapon.GetInventory().CreateAttachment("M4_Suppressor");
@@ -202,8 +199,8 @@ class CampMission extends SurvivorMissions
 		if (selectedLoadout == 2)
 		{
 			weapon = MissionObject.GetInventory().CreateInInventory("AKM");
-				weapon.GetInventory().CreateAttachment("AK_RailHndgrd_Green");
-				weapon.GetInventory().CreateAttachment("AK_PlasticBttstck_Green");
+				weapon.GetInventory().CreateAttachment("AK_RailHndgrd");
+				weapon.GetInventory().CreateAttachment("AK_PlasticBttstck");
 				weapon.GetInventory().CreateAttachment("PSO1Optic");
 				weapon.GetInventory().CreateAttachment("AK_Suppressor");
 			MissionObject.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
@@ -356,6 +353,7 @@ class CampMission extends SurvivorMissions
 		if ( CampFireDir[0] < 0 )	CampFireDir[0] = 360 + CampFireDir[0];
 		//some nostalgic code 
 		CampfirePosition [0] = m_MissionPosition [0] - Math.Sin( CampFireDir[0] * Math.DEG2RAD ) * CampFireDist;		//x offset
+		CampfirePosition [1] = m_MissionPosition [1];
 		CampfirePosition [2] = m_MissionPosition [2] - Math.Cos( CampFireDir[0] * Math.DEG2RAD ) * CampFireDist;		//y offset
 		MissionCampfire = FireplaceBase.Cast( GetGame().CreateObject( "Fireplace", CampfirePosition ) );
 		CampfireOrientation = MissionCampfire.GetOrientation();
@@ -385,11 +383,7 @@ class CampMission extends SurvivorMissions
 			InfectedSurvivor.GetInventory().CreateAttachment("FlatCap_Blue");
 			InfectedSurvivor.GetInventory().CreateAttachment("MountainBag_Blue");
 			InfectedSurvivor.GetInventory().CreateAttachment("UKAssVest_Black");
-		EntityAI weapon1 = InfectedSurvivor.GetInventory().CreateInInventory("M4A1_Green");
-				weapon1.GetInventory().CreateAttachment("M4_RISHndgrd_Green");
-				weapon1.GetInventory().CreateAttachment("M4_MPBttstck");
-				weapon1.GetInventory().CreateAttachment("ACOGOptic");
-				weapon1.GetInventory().CreateAttachment("M4_Suppressor");
+			
 			InfectedSurvivor.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
 			InfectedSurvivor.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
 			InfectedSurvivor.GetInventory().CreateInInventory("M4_T3NRDSOptic");
@@ -421,7 +415,7 @@ class CampMission extends SurvivorMissions
 	}
 	
 	void ObjDespawn() 
-	{	
+	{
 		//Despawn all mission objects at mission timeout except those retains until next mission
 		for ( int i = 0; i < m_MissionObjects.Count(); i++ )
 		{
@@ -453,30 +447,13 @@ class CampMission extends SurvivorMissions
 		//Finish mission
 		m_RewardsSpawned = true;
 		m_MsgNum = -1;
-		m_MsgChkTime = m_MissionTime + MsgDlyFinish;			
+		m_MsgChkTime = m_MissionTime;
+		
+		EntityAI.Cast( m_MissionObjects[0] ).SetLifetime(60);
+		m_MissionObjects.Remove(0);
 	}
 	
-	void PlayerChecks( PlayerBase player )
-	{
-		//Check if container gets taken from player
-		if ( MissionSettings.Opt_DenyObjTakeaway )
-		{		
-			if ( m_MissionObjects[0] && m_MissionObjects[0].ClassName() == "MediumTent" ) 
-			{
-				if ( TentBase.Cast( m_MissionObjects[0] ).CanBeManipulated() && !m_ContainerWasTaken )
-				{
-					m_ContainerWasTaken = true;
-					Print("[SMM] Mission tent was packed by a player ...and will be deleted.");
-					GetGame().ObjectDelete( m_MissionObjects[0] );
-				}
-			}
-		}	
-	}
-		
-	void UpdateBots(float dt)
-	{
-		//Test1.OnUpdate(dt);		
-	}
+	void PlayerChecks( PlayerBase player ) {}
 	
 	bool DeployMission()
 	{	//When first player enters the mission zone (primary/secondary)

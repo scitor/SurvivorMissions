@@ -145,8 +145,8 @@ class BearHuntMission extends SurvivorMissions
 				
 		if ( selectedLoadout == 0 )
 		{
-			weapon = MissionObject.GetInventory().CreateInInventory("M4A1_Green");
-				weapon.GetInventory().CreateAttachment("M4_RISHndgrd_Green");
+			weapon = MissionObject.GetInventory().CreateInInventory("M4A1");
+				weapon.GetInventory().CreateAttachment("M4_RISHndgrd");
 				weapon.GetInventory().CreateAttachment("M4_MPBttstck");
 				weapon.GetInventory().CreateAttachment("ACOGOptic");
 				weapon.GetInventory().CreateAttachment("M4_Suppressor");
@@ -457,14 +457,16 @@ class BearHuntMission extends SurvivorMissions
 		//Check if container has desired amount of mushrooms collected at primary mission position
 		if ( MissionObject && MissionObject.ClassName() == "HuntingBag" && !m_MissionExtended )
 		{
-			int CargoCount = MissionObject.GetInventory().CountInventory();
+			int CargoCount;
 			int LastCount = 0;
 			int FoundMeatObjects = 0;
 			bool FoundPeltObject = false;
 			
+			CargoCount = MissionObject.GetInventory().CountInventory();
+			
 			if ( CargoCount != LastCount )
 			{
-				if ( CargoCount >= ReqMeatAmount && FoundMeatObjects <= ReqMeatAmount )
+				if ( CargoCount >= ReqMeatAmount )
 				{	
 					CargoBase CargoItems1 = MissionObject.GetInventory().GetCargo();		
 					
@@ -489,15 +491,14 @@ class BearHuntMission extends SurvivorMissions
 							break;
 						} 
 					}
-					LastCount = CargoCount;
+					
+					FoundMeatObjects = 0;
+					FoundPeltObject = false;
 				}
+				
+				LastCount = CargoCount;
 			} 
 		}		
-	}
-		
-	void UpdateBots(float dt)
-	{
-		//No bots involved in this mission		
 	}
 	
 	bool DeployMission()

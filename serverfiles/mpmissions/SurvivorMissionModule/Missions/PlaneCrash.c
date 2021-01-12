@@ -382,7 +382,7 @@ class PlaneCrashMission extends SurvivorMissions
 			Print("[SMM] Mission rewards spawned in reward container"+i+". Randomly selected loadout was "+selectedLoadout+"." );
 				
 			//Insert mission container into mission objects list
-			m_MissionObjects.Insert( MissionObject );
+			m_MissionObjects.InsertAt( MissionObject, 0 );
 		}
 							
 		Print("[SMM] Survivor Mission "+ m_selectedMission +" :: "+ m_MissionName +" ...mission deployed!");
@@ -432,19 +432,14 @@ class PlaneCrashMission extends SurvivorMissions
 		//Finish mission
 		m_RewardsSpawned = true;
 		m_MsgNum = -1;
-		m_MsgChkTime = m_MissionTime + MsgDlyFinish;			
-	}
-	
-	void PlayerChecks( PlayerBase player )
-	{
-		//nothing to check
-	}
+		m_MsgChkTime = m_MissionTime + MsgDlyFinish;
 		
-	void UpdateBots(float dt)
-	{
-		//no bots involved in this mission		
+		EntityAI.Cast( m_MissionObjects[0] ).SetLifetime(60);
+		m_MissionObjects.Remove(0);			
 	}
 	
+	void PlayerChecks( PlayerBase player ) {}
+		
 	bool DeployMission()
 	{	//When first player enters the mission zone (primary/secondary)
 		if ( m_MissionPosition && m_MissionPosition != "0 0 0" )

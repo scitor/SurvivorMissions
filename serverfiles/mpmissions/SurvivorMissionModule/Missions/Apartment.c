@@ -1,10 +1,8 @@
 class ApartmentMission extends SurvivorMissions
 {
-	//Mission related entities 
+	//Mission related entities
+	ItemBase MissionObject;
 	Object MissionBuilding;
-
-	//Mission parameters	
-	int MsgDlyFinish = 300;					//seconds, message delay time after player has finished mission
 	
 	//Mission containers
 	ref array<vector> Spawnpoints = new array<vector>;
@@ -159,7 +157,7 @@ class ApartmentMission extends SurvivorMissions
 	void SpawnObjects()
 	{	
 		//Spawn seachest as mission object
-		ItemBase MissionObject = ItemBase.Cast( GetGame().CreateObject( "SeaChest", m_MissionPosition, false, false, false ) );
+		MissionObject = ItemBase.Cast( GetGame().CreateObject( "SeaChest", m_MissionPosition, false, false, false ) );
 		
 		//Get random loadout 			
 		int selectedLoadout = Math.RandomIntInclusive(0,11);	//!Change randomization limit after adding new loadouts!
@@ -441,10 +439,8 @@ class ApartmentMission extends SurvivorMissions
 		  	string RandomInfected = InfectedTypes.GetRandomElement();
 			vector InfectedPos = MissionBuilding.ModelToWorld( InfectedSpawns.Get(j) );
 			DayZInfected Zed = DayZInfected.Cast( GetGame().CreateObject( RandomInfected, InfectedPos, false, true ));
-			//DayZInfectedCommandMove moveCommandZ = Zed.GetCommand_Move();	moveCommandZ.SetIdleState(2);	//Set infected mind state alarmed
 			m_MissionAIs.Insert( Zed );
-		}
-			
+		}			
 	}
 			
 	void ObjDespawn() 
@@ -481,7 +477,6 @@ class ApartmentMission extends SurvivorMissions
 			if ( InfectedDistance > 5.0 )
 			{
 				DayZInfected Zed = DayZInfected.Cast( GetGame().CreateObject( RandomInfected, InfectedPos, false, true ));
-				DayZInfectedCommandMove moveCommandZ = Zed.GetCommand_Move();	moveCommandZ.SetIdleState(2);
 				m_MissionAIs.Insert( Zed );
 			}		
 		}
@@ -489,31 +484,14 @@ class ApartmentMission extends SurvivorMissions
 		//Finish mission
 		m_RewardsSpawned = true;
 		m_MsgNum = -1;
-		m_MsgChkTime = m_MissionTime + MsgDlyFinish;
+		m_MsgChkTime = m_MissionTime;
+		
+		EntityAI.Cast( m_MissionObjects[0] ).SetLifetime(60);
+		m_MissionObjects.Remove(0);
 	}
 	
-	void PlayerChecks( PlayerBase player )
-	{
-		//Check if container gets taken from player
-		if ( MissionSettings.Opt_DenyObjTakeaway )
-		{
-			if ( m_MissionObjects[0] && m_MissionObjects[0].ClassName() == "SeaChest" )
-			{
-				if ( player.GetInventory().HasEntityInInventory( EntityAI.Cast( m_MissionObjects[0] )) && !m_ContainerWasTaken )
-				{
-					m_ContainerWasTaken = true;
-					Print("[SMM] Mission object container was taken by a player ...and will be deleted.");
-					GetGame().ObjectDelete( m_MissionObjects[0] );
-				}
-			}
-		}		
-	}
+	void PlayerChecks( PlayerBase player ) {}
 		
-	void UpdateBots(float dt)
-	{
-		//No bots involved in this mission		
-	}
-			
 	bool DeployMission()
 	{	//When first player enters the mission zone (primary/secondary)
 		//Search for mission building at mission position	

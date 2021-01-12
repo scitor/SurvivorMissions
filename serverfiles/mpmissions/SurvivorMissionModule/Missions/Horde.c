@@ -9,9 +9,6 @@ class HordeMission extends SurvivorMissions
 	
 	//Mission containers
 	ref array<string> InfectedTypes = new array<string>;
-
-	//Mission variables 
-			
 	
 	bool IsExtended() return false;
 	
@@ -372,33 +369,14 @@ class HordeMission extends SurvivorMissions
 	void MissionFinal()
 	{	//When player enters last mission target zone	
 
-		//Alert infected 
-		for ( int j = 1 ; j < m_MissionAIs.Count(); j++ )
-		{
-			DayZInfected Zed = DayZInfected.Cast( m_MissionAIs.Get(j));
-			if ( Zed )
-			{
-				DayZInfectedCommandMove moveCommandZ = Zed.GetCommand_Move();
-				moveCommandZ.SetIdleState(2);
-			}
-		}
-		
 		//Finish mission
 		m_RewardsSpawned = true;
 		m_MsgNum = -1;
 		m_MsgChkTime = m_MissionTime + MsgDlyFinish;			
 	}
 	
-	void PlayerChecks( PlayerBase player )
-	{
-		
-	}
-		
-	void UpdateBots(float dt)
-	{
+	void PlayerChecks( PlayerBase player ) {}
 			
-	}
-	
 	bool DeployMission()
 	{	//When first player enters the mission zone (primary/secondary)
 		if ( m_MissionPosition && m_MissionPosition != "0 0 0" )

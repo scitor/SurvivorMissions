@@ -523,16 +523,17 @@ class FreePigsMission extends SurvivorMissions
 		//Check if container has desired amount of steaks collected at primary mission position
 		if ( MissionObject && MissionObject.ClassName() == "HuntingBag" && !m_MissionExtended )
 		{
-			int CargoCount = MissionObject.GetInventory().CountInventory();
+			int CargoCount;
 			int LastCount = 0;
 			int FoundObjects;
 			
+			CargoCount = MissionObject.GetInventory().CountInventory();
+			
 			if ( CargoCount != LastCount )
 			{
-				FoundObjects = 0;
-				
 				if ( CargoCount >= ReqMeatAmount )
 				{	
+					FoundObjects = 0;
 					CargoBase CargoItems1 = MissionObject.GetInventory().GetCargo();		
 					
 					for ( int i = 0; i < CargoCount; i++ )
@@ -555,9 +556,9 @@ class FreePigsMission extends SurvivorMissions
 							break;
 						} 
 					}
-										
-					LastCount = CargoCount;
 				}
+				
+				LastCount = CargoCount;
 			} 
 		}		
 	}

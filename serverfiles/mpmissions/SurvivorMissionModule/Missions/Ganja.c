@@ -568,15 +568,18 @@ class GanjaMission extends SurvivorMissions
 		if ( MissionObject && MissionObject.ClassName() == "CourierBag" && !m_MissionExtended )
 		{		
 			float BagDistance = vector.Distance( MissionObject.GetPosition(), m_MissionPosition );
+			
 			if ( BagDistance < 3 )
 			{
-				int CargoCount = MissionObject.GetInventory().CountInventory();
+				int CargoCount;
 				int LastCount = 0;
 				int FoundObjects = 0;
 				
+				CargoCount = MissionObject.GetInventory().CountInventory();
+				
 				if ( CargoCount != LastCount )
 				{
-					if ( CargoCount >= ReqWeedAmount && FoundObjects <= ReqWeedAmount )
+					if ( CargoCount >= ReqWeedAmount )
 					{	
 						CargoBase CargoItems1 = MissionObject.GetInventory().GetCargo();		
 						
@@ -600,16 +603,14 @@ class GanjaMission extends SurvivorMissions
 								break;
 							} 
 						}
-						LastCount = CargoCount;
+						
+						FoundObjects = 0;
 					}
+					
+					LastCount = CargoCount;
 				} 		
 			}
 		}		
-	}
-		
-	void UpdateBots( float dt )
-	{
-		//No bots involved in this mission		
 	}
 	
 	bool DeployMission()

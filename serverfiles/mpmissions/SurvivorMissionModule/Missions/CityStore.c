@@ -201,7 +201,6 @@ class CityStoreMission extends SurvivorMissions
 		Barricades.Insert( new Param3<string,vector,vector>("Land_Roadblock_WoodenCrate", "-9.69 -0.882 1.7" - Offset , "-30 0 0"));
 		Barricades.Insert( new Param3<string,vector,vector>("Land_Roadblock_WoodenCrate", "-9.59 -0.262 1.7" - Offset , "-32 0 5"));
 		//other stuff, dead survivor related 
-		Barricades.Insert( new Param3<string,vector,vector>("AdvancedImprovisedShelterPitched", "7.84 -1.18149 1.39" - Offset , "-90 0 0"));
 		Barricades.Insert( new Param3<string,vector,vector>("PissGround", "-10.26 -1.200 -8.08" - Offset , "180 0 0"));
 		
 		//Search for mission building at primary mission position	
@@ -714,9 +713,11 @@ class CityStoreMission extends SurvivorMissions
 		if ( MissionObject && MissionObject.ClassName() == "MountainBag_Orange" && !m_MissionExtended )
 		{
 			int LastCount = 0;
-			int CargoCount = MissionObject.GetInventory().CountInventory();			
+			int CargoCount;			
 			int FoundMedObjects = 0;
 			int FoundFoodObjects = 0;
+			
+			CargoCount = MissionObject.GetInventory().CountInventory();	
 			
 			if ( CargoCount != LastCount )
 			{
@@ -751,8 +752,12 @@ class CityStoreMission extends SurvivorMissions
 							break;
 						} 
 					}
-					LastCount = CargoCount;
+					
+					FoundMedObjects = 0;
+					FoundFoodObjects = 0;
 				}
+				
+				LastCount = CargoCount;
 			} 
 		}				
 	}
