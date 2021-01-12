@@ -25,6 +25,7 @@ class CityMallMission extends SurvivorMissions
 	vector TargetPosition = "-5.3 -1.2 1.9";
 	vector RewardsPosition = "-3.46 -5.72 6.63";
 	string SurvivorName;	
+	string MissionLocationName;
 	
 	bool IsExtended() return true;
 	
@@ -47,10 +48,13 @@ class CityMallMission extends SurvivorMissions
 		TStringArray SurvivorNames = {"Tamarova", "Lorzinski", "Blosmanova", "Gabarin", "Sloskova", "Belzin", "Homyuk", "Trademzyuk", "Jankarova"};
 		SurvivorName = SurvivorNames.GetRandomElement();
 		
+		//Mission location name
+		MissionLocationName = m_MissionLocation;
+		MissionLocationName.Replace("_", " ");
 		//Set mission messages for primary mission
-		m_MissionMessage1 = "Ms. "+ SurvivorName +", a ground school teacher, told me that she has brought some children of her class in safety from their infected families. I promised that i will help her for getting food and other medical supplies for the kids.";
-		m_MissionMessage2 = "Yesterday I found out that the Supermarket in\n** "+ m_MissionLocation +" **\nis barricaded and probably has some food inside. But there were too many infected around, i wasn't able to check the Supermarket.";
-		m_MissionMessage3 = "She immediately needs following things from the market:\n- "+ ReqFoodAmount +" cans of food and..\n- "+ ReqMedAmount +" packets of antibiotics\nPlease help me to support Ms. "+ SurvivorName +" with those life essentials for the kids.";
+		m_MissionMessage1 = "Ms. "+ SurvivorName +", an elementary school teacher, told me that she has brought some children of her class in safety from their infected families. I promised that I will help her for getting food and other medical supplies for the kids.";
+		m_MissionMessage2 = "Yesterday I found out that the Supermarket \n** "+ m_MissionLocationDir +" of "+ MissionLocationName +" **\nis barricaded and probably has some food inside. But there were too many infected around, I wasn't able to check the Supermarket.";
+		m_MissionMessage3 = "She needs following things from the market:\n- "+ ReqFoodAmount +" cans of food and..\n- "+ ReqMedAmount +" packets of antibiotics\nPlease help me to support Ms. "+ SurvivorName +" with those life essentials for the kids.";
 		
 		//Spawnpoints for antibiotics in store (cash desk)
 		MedSpawns.Insert("-5.392 -0.686 1.087");
@@ -710,7 +714,7 @@ class CityMallMission extends SurvivorMissions
 						EntityAI CargoItem = CargoItems1.GetItem(i); 
 						Object CargoObject = CargoItem;
 
-						if ( m_MissionObjects.Find( CargoObject ) > -1 ) 
+						if ( CargoObject && m_MissionObjects.Find( CargoObject ) > -1 )
 						{
 							if ( CargoObject.GetType() == "TetracyclineAntibiotics")	FoundMedObjects++; 
 							if ( FoodTypes.Find( CargoObject.GetType() ) > -1 )			FoundFoodObjects++;
@@ -751,10 +755,10 @@ class CityMallMission extends SurvivorMissions
 			for ( int i=0; i < m_ObjectList.Count(); i++ )
 			{ 
 				Object FoundObject = m_ObjectList.Get(i);
-				if ( FoundObject.GetType() == "Land_Village_PoliceStation")
+				if ( FoundObject.GetType().Contains("Land_Village_PoliceStation") )
 				{			 
 					MissionBuilding = FoundObject;
-					Print("[SMM] MissionBuilding extended is "+ m_MissionDescription[3] +" Police Station @ "+ m_MissionPosition );
+					Print("[SMM] MissionBuilding extended is "+ m_MissionDescription[3] +" "+ FoundObject.GetType() +" @ "+ m_MissionPosition );
 					
 					//new MissionPosition is rewards spawnpoint
 					m_MissionPosition = MissionBuilding.ModelToWorld( RewardsPosition );
