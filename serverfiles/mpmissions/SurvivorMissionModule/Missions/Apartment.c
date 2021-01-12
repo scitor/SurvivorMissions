@@ -382,8 +382,8 @@ class ApartmentMission extends SurvivorMissions
 		
 		Print("[SMM] Mission rewards spawned in reward container. Randomly selected loadout was "+ selectedLoadout +"." );
 					
-		//Insert mission crate into mission objects list
-		m_MissionObjects.Insert( MissionObject );
+                //Don't insert mission crate into mission objects list, or players will get mad if you despawn stuff out their inv... wtf
+                //m_MissionObjects.Insert( MissionObject );
 		
 		//Spawn barricades		
 		for ( int i=0; i < Barricades.Count(); i++ )
@@ -461,7 +461,8 @@ class ApartmentMission extends SurvivorMissions
 				//Exception: Barricades will remain
 				if ( m_MissionObjects.Get(i).GetType() == "WoodenLog" ) continue;
 				if ( m_MissionObjects.Get(i).GetType() == "WoodenPlank" ) continue;
-				if ( m_MissionObjects.Get(i).GetType() == "Land_Boat_Small1" ) continue;
+                                // client invisible items should not remain, or there will be confusion
+                                //if ( m_MissionObjects.Get(i).GetType() == "Land_Boat_Small1" ) continue;
 
 				//Delete Object
 				GetGame().ObjectDelete( m_MissionObjects.Get(i));
@@ -471,10 +472,6 @@ class ApartmentMission extends SurvivorMissions
 	
 	void MissionFinal()
 	{	//When player enters last mission target zone
-		//Open all doors of mission building
-		Building Tenement = Building.Cast( MissionBuilding );
-		for ( int i=0; i < 32; i++ ) if ( !Tenement.IsDoorOpen(i) ) Tenement.OpenDoor(i);
-		GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater( GetGame().UpdatePathgraphRegionByObject, 1000, false, Tenement );
 		
 		//Respawn some infected 
 		for ( int j = 0 ; j < InfectedSpawns.Count() ; j++ )
@@ -538,12 +535,9 @@ class ApartmentMission extends SurvivorMissions
 				
 		if ( MissionBuilding )
 		{	
-			//Close all doors of mission building
+                        //Open all doors of mission building
 			Building Tenement = Building.Cast( MissionBuilding );
-			for (int k=0; k < 32; k++ )
-			{
-				if ( Tenement.IsDoorOpen(k) ) Tenement.CloseDoor(k);
-			}
+                        for (int k=0; k < 32; k++ ) if ( !Tenement.IsDoorOpen(k) ) Tenement.OpenDoor(k);
 			GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater( GetGame().UpdatePathgraphRegionByObject, 1000, false, Tenement );
 			
 			//Call spawners	
